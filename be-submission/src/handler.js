@@ -108,28 +108,16 @@ function deleteBookByIdHandler(req, h) {
   const { id } = req.params;
 
   const bookToDelete = books.findIndex((book) => book.id === id);
-  if (bookToDelete) {
-    const response = h.response({
-      status: 'not found',
-      message: 'book not found',
-    });
+  if (bookToDelete < 0) {
+    const response = new FailedResponse(h);
 
-    response.code(404);
-    return response;
+    return response.notFound('Buku gagal dihapus. Id tidak ditemukan');
   }
 
   books.splice(bookToDelete, 1);
+  const response = new Response(h);
 
-  const response = h.response({
-    status: 'success',
-    message: 'book found!',
-    data: {
-      deletedBook: bookToDelete,
-    },
-  });
-
-  response.code(200);
-  return response;
+  return response.success('Buku berhasil dihapus', { data: bookToDelete }, 200);
 }
 
 module.exports = {
