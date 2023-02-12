@@ -7,16 +7,14 @@ const FailedResponse = require('./lib/FailedResponse');
 const books = require('./data');
 
 function getAllBooksHandler(req, h) {
-  const response = h.response({
-    status: 'success',
-    message: 'get all books',
-    data: {
-      books,
-    },
-  });
+  const response = new Response(h);
+  const datas = books.map((book) => ({
+    id: book.id,
+    name: book.name,
+    publisher: book.publisher,
+  }));
 
-  response.code(200);
-  return response;
+  return response.success('Berhasil mendapatkan buku', { books: datas }, 200);
 }
 
 function addNewBookHandler(req, h) {
@@ -25,8 +23,11 @@ function addNewBookHandler(req, h) {
     name, year, author, summary, publisher, pageCount, readPage, reading,
   } = req.payload;
 
+  const insertedAt = new Date().toISOString();
+  const updatedAt = insertedAt;
+
   const newBook = {
-    id, name, year, author, summary, publisher, pageCount, readPage, reading,
+    id, name, year, author, summary, publisher, pageCount, readPage, reading, insertedAt, updatedAt,
   };
 
   const validation = bookDataValidation(newBook);
@@ -51,30 +52,18 @@ function addNewBookHandler(req, h) {
 }
 
 function getBookByIdHandler(req, h) {
-  const { id } = req.payload;
+  const { id } = req.params;
 
   const matchingBook = books.find((book) => book.id === id);
 
-  if (matchingBook) {
-    const response = h.response({
-      status: 'not found',
-      message: 'book not found',
-    });
+  if (!matchingBook) {
+    const response = new FailedResponse(h);
 
-    response.code(404);
-    return response;
+    return response.notFound('Buku tidak ditemukan');
   }
 
-  const response = h.response({
-    status: 'success',
-    message: 'Buku berhasil ditambahkan',
-    data: {
-      book: matchingBook,
-    },
-  });
-
-  response.code(201);
-  return response;
+  const response = new Response(h);
+  return response.success('Buku ditemukan', { book: matchingBook }, 200);
 }
 
 function editBookByIdHandler(req, h) {
@@ -111,7 +100,7 @@ function editBookByIdHandler(req, h) {
 }
 
 function deleteBookByIdHandler(req, h) {
-  const { id } = req.payload;
+  const { id } = req.params;
 
   const bookToDelete = books.findIndex((book) => book.id === id);
   if (bookToDelete) {

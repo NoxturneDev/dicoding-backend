@@ -15,6 +15,16 @@ class Response {
     response.code(code);
     return response;
   }
+
+  success(message, data, code) {
+    this.responseOpt.status = 'success';
+    const response = this.helper.response({
+      ...this.responseOpt, message, data,
+    });
+
+    response.code(code);
+    return response;
+  }
 }
 
 module.exports = Response;
