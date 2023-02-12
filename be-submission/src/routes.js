@@ -1,9 +1,17 @@
-const {getAllBooks} = require('handler')
+/* eslint-disable import/no-unresolved */
+const { getAllBooksHandler, addNewBookHandler } = require('./handler');
 
 const routes = [
   {
-    method : 'GET',
+    method: 'GET',
     path: '/books',
-    handler: 
-  }
-]
+    handler: getAllBooksHandler,
+  },
+  {
+    method: 'POST',
+    path: '/books',
+    handler: addNewBookHandler,
+  },
+];
+
+module.exports = routes;
