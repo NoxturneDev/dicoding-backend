@@ -67,36 +67,41 @@ function getBookByIdHandler(req, h) {
 }
 
 function editBookByIdHandler(req, h) {
+  const { id } = req.params;
   const {
-    id, name, year, author, summary, publisher, pageCount, readPage, reading,
+    name, year, author, summary, publisher, pageCount, readPage, reading,
   } = req.payload;
 
   const bookIndex = books.findIndex((book) => book.id === id);
-  if (bookIndex < 0) {
-    const response = h.response({
-      status: 'not found',
-      message: 'book not found',
-    });
 
-    response.code(404);
-    return response;
+  if (bookIndex < 0) {
+    const response = new FailedResponse(h);
+
+    return response.notFound('Gagal memperbarui buku. Id tidak ditemukan');
   }
 
   const editedBook = {
     id, name, year, author, summary, publisher, pageCount, readPage, reading,
   };
-  books[bookIndex] = [...books[bookIndex], ...editedBook];
 
-  const response = h.response({
-    status: 'success',
-    message: 'book found!',
-    data: {
-      book: editedBook,
-    },
-  });
+  const validation = bookDataValidation(editedBook);
 
-  response.code(200);
-  return response;
+  if (validation.isNoName) {
+    const response = new FailedResponse(h);
+
+    return response.invalidData('Gagal memperbarui buku. Mohon isi nama buku');
+  }
+
+  if (validation.isInvalidPageCount) {
+    const response = new FailedResponse(h);
+
+    return response.invalidData('Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount');
+  }
+
+  books[bookIndex] = { ...books[bookIndex], ...editedBook };
+
+  const response = new Response(h);
+  return response.success('Buku berhasil diperbarui', { data: editedBook }, 200);
 }
 
 function deleteBookByIdHandler(req, h) {
