@@ -18,13 +18,6 @@ const addNewNotesHandler = (request, h) => {
   const isSuccess = notes.filter((note) => note.id === id).length > 0;
 
   if (!isSuccess) {
-    const response = h.response({
-      status: 'fail',
-      message: 'Failed to send new notes',
-    })
-
-    response.code(500);
-    return response;
   }
 
   const response = h.response({

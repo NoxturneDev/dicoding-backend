@@ -1,12 +1,11 @@
 /* eslint-disable no-use-before-define */
 function bookDataValidation(newBook) {
   const book = newBook;
-  const isFinish = isFinishedReading(book.pageCount, book.readPage);
   const isInvalidPageCount = checkInvalidPageCount(book.pageCount, book.readPage);
   const isNoName = checkInvalidName(book.name);
 
   return {
-    isFinish, isNoName, isInvalidPageCount,
+    isNoName, isInvalidPageCount,
   };
 }
 
@@ -28,4 +27,4 @@ function checkInvalidName(name) {
   return false;
 }
 
-module.exports = { bookDataValidation };
+module.exports = { bookDataValidation, isFinishedReading };

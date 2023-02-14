@@ -1,4 +1,4 @@
-const Response = require('./ResponseClass');
+const Response = require('./Response');
 
 class FailedResponse extends Response {
   constructor(helper) {
@@ -10,22 +10,21 @@ class FailedResponse extends Response {
     };
   }
 
-  notFound(message) {
+  createResponse(message, code) {
     const response = this.helper.response({
       ...this.responseOpt, message,
     });
 
-    response.code(404);
+    response.code(code);
     return response;
   }
 
-  invalidData(message) {
-    const response = this.helper.response({
-      ...this.responseOpt, message,
-    });
+  notFound(message) {
+    return this.createResponse(message, 404);
+  }
 
-    response.code(400);
-    return response;
+  invalidData(message) {
+    return this.createResponse(message, 400);
   }
 }
 
