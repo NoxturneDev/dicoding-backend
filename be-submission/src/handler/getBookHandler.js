@@ -30,13 +30,12 @@ function getAllBooks(req, h) {
 
   if (name) {
     const getBookByName = filterBookByName(name);
-    const responseData = mapBookByIdAuthorPublisher(getBookByName);
 
+    const responseData = mapBookByIdAuthorPublisher(getBookByName);
     return response.success('Berhasil mendapatkan buku', { books: responseData }, 200);
   }
 
   const responseData = mapBookByIdAuthorPublisher(books);
-
   return response.success('Berhasil mendapatkan buku', { books: responseData }, 200);
 }
 

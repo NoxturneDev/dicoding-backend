@@ -1,4 +1,4 @@
-/* eslint-disable import/no-unresolved */
+/* eslint-disable no-console */
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
 

@@ -3,12 +3,13 @@ const books = require('../data');
 
 class FilterBook {
   constructor() {
-    this.books = books;
+    this.books = [...books];
   }
 
   createFilter(filter, condition) {
-    console.log(this.books.filter((book) => book[filter] === condition));
-    return this.books.filter((book) => book[filter] === condition);
+    const tmp = this.books.filter(((book) => book[filter] === condition));
+
+    return tmp;
   }
 
   filterByReading(status) {
@@ -22,16 +23,21 @@ class FilterBook {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  filterByName(name) {
-    // eslint-disable-next-line array-callback-return, consistent-return
-    const containsName = books.filter((book) => {
-      const bookName = book.name.toLowerCase();
-      const isContainsName = bookName.split('').find((bn) => bn === name);
+  filterByName(searchedName) {
+    const name = searchedName.toLowerCase();
+    const temp = [];
 
-      if (isContainsName) return book;
+    this.books.forEach((book) => {
+      const bookName = book.name.toLowerCase();
+      const bookNameSplitted = bookName.split(' ');
+      const isContainsName = bookNameSplitted.find((string) => string === name);
+
+      if (isContainsName) {
+        temp.push(book);
+      }
     });
 
-    return containsName;
+    return temp;
   }
 
   getBookByReadingStatus(status) {
@@ -50,8 +56,8 @@ class FilterBook {
     return this.filterByFinish(true);
   }
 
-  getBookByName(name) {
-    return this.filterByName(name);
+  getBookByName(searchedName) {
+    return this.filterByName(searchedName);
   }
 }
 

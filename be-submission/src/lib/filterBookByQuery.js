@@ -22,7 +22,6 @@ function filterBookByName(name) {
   const filterBook = new FilterBook();
 
   const filteredBook = filterBook.getBookByName(name);
-  console.log(filteredBook);
   return filteredBook;
 }
 
